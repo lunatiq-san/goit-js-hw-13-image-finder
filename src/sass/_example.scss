@@ -1,0 +1,31 @@
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+}
+
+.photo-card {
+  width: 33.33%;
+}
+
+img {
+  width: 100%;
+}
+
+.btn {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 15px;
+
+  border-radius: 5px;
+  border: 0;
+
+  background-color: tomato;
+}
+
+input {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
