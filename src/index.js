@@ -49,8 +49,12 @@ function onLoadMore() {
 }
 
 function appendHitsMarkup(hits) {
-  console.log(hits);
   refs.gallery.insertAdjacentHTML('beforeend', hitsTpl(hits));
+
+  refs.loadMoreBtn.scrollIntoView({
+    behavior: 'smooth',
+    block: 'end',
+  });
 }
 
 function clearGallery() {
