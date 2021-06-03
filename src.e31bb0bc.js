@@ -2367,7 +2367,7 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"js/get-refs.js":[function(require,module,exports) {
+},{"./..\\images\\bg.jpg":[["bg.43bfd8b0.jpg","images/bg.jpg"],"images/bg.jpg"],"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"js/get-refs.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2380,8 +2380,7 @@ function getRefs() {
     searchForm: document.querySelector('.search-form'),
     input: document.querySelector('input'),
     gallery: document.querySelector('.gallery'),
-    photoCard: document.querySelector('.photo-card'),
-    loadMoreBtn: document.querySelector('[data-action="load-more"]')
+    photoCard: document.querySelector('.photo-card')
   };
 }
 },{}],"../node_modules/lodash.debounce/index.js":[function(require,module,exports) {
@@ -2822,6 +2821,68 @@ var ApiService = /*#__PURE__*/function () {
 }();
 
 exports.default = ApiService;
+},{}],"js/load-more-btn.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var LoadMoreBtn = /*#__PURE__*/function () {
+  function LoadMoreBtn(_ref) {
+    var selector = _ref.selector,
+        _ref$hidden = _ref.hidden,
+        hidden = _ref$hidden === void 0 ? false : _ref$hidden;
+
+    _classCallCheck(this, LoadMoreBtn);
+
+    this.refs = this.getRefs(selector);
+    hidden && this.hide();
+  }
+
+  _createClass(LoadMoreBtn, [{
+    key: "getRefs",
+    value: function getRefs(selector) {
+      var refs = {};
+      refs.button = document.querySelector(selector);
+      refs.label = refs.button.querySelector('.label');
+      return refs;
+    }
+  }, {
+    key: "enable",
+    value: function enable() {
+      this.refs.button.disabled = false;
+      this.refs.label.textContent = 'Load more';
+    }
+  }, {
+    key: "disable",
+    value: function disable() {
+      this.refs.button.disabled = true;
+      this.refs.label.textContent = 'Loading...';
+    }
+  }, {
+    key: "show",
+    value: function show() {
+      this.refs.button.classList.remove('is-hidden');
+    }
+  }, {
+    key: "hide",
+    value: function hide() {
+      this.refs.button.classList.add('is-hidden');
+    }
+  }]);
+
+  return LoadMoreBtn;
+}();
+
+exports.default = LoadMoreBtn;
 },{}],"../node_modules/basiclightbox/dist/basicLightbox.min.js":[function(require,module,exports) {
 var define;
 var global = arguments[3];
@@ -2839,6 +2900,8 @@ var _lodash = _interopRequireDefault(require("lodash.debounce"));
 
 var _apiService = _interopRequireDefault(require("./js/apiService"));
 
+var _loadMoreBtn = _interopRequireDefault(require("./js/load-more-btn"));
+
 var basicLightbox = _interopRequireWildcard(require("basiclightbox"));
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
@@ -2848,9 +2911,13 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var refs = (0, _getRefs.default)();
+var loadMoreBtn = new _loadMoreBtn.default({
+  selector: '[data-action="load-more"]',
+  hidden: true
+});
 var apiService = new _apiService.default();
 refs.input.addEventListener('input', (0, _lodash.default)(onInputChange, 500));
-refs.loadMoreBtn.addEventListener('click', onLoadMore);
+loadMoreBtn.refs.button.addEventListener('click', fetchHits);
 refs.gallery.addEventListener('click', onImageGalleryClick);
 
 function onInputChange(event) {
@@ -2861,17 +2928,22 @@ function onInputChange(event) {
   }
 
   clearGallery();
+  loadMoreBtn.show();
   apiService.resetPage();
-  apiService.fetchImages().then(appendHitsMarkup);
+  fetchHits();
 }
 
-function onLoadMore() {
-  apiService.fetchImages().then(appendHitsMarkup);
+function fetchHits() {
+  loadMoreBtn.disable();
+  apiService.fetchImages().then(function (hits) {
+    appendHitsMarkup(hits);
+    loadMoreBtn.enable();
+  });
 }
 
 function appendHitsMarkup(hits) {
   refs.gallery.insertAdjacentHTML('beforeend', (0, _hits.default)(hits));
-  refs.loadMoreBtn.scrollIntoView({
+  loadMoreBtn.refs.button.scrollIntoView({
     behavior: 'smooth',
     block: 'end'
   });
@@ -2894,7 +2966,7 @@ function openMobalBasic(url) {
   var instance = basicLightbox.create("<img src=\"".concat(url, "\" width=\"1600\" height=\"900\">"));
   instance.show();
 }
-},{"./templates/hits.hbs":"templates/hits.hbs","./sass/main.scss":"sass/main.scss","./js/get-refs":"js/get-refs.js","lodash.debounce":"../node_modules/lodash.debounce/index.js","./js/apiService":"js/apiService.js","basiclightbox":"../node_modules/basiclightbox/dist/basicLightbox.min.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./templates/hits.hbs":"templates/hits.hbs","./sass/main.scss":"sass/main.scss","./js/get-refs":"js/get-refs.js","lodash.debounce":"../node_modules/lodash.debounce/index.js","./js/apiService":"js/apiService.js","./js/load-more-btn":"js/load-more-btn.js","basiclightbox":"../node_modules/basiclightbox/dist/basicLightbox.min.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -2922,7 +2994,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "1303" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "10223" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
