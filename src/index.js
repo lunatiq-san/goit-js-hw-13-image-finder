@@ -3,13 +3,18 @@ import './sass/main.scss';
 import getRefs from './js/get-refs';
 import debounce from 'lodash.debounce';
 import ApiService from './js/apiService';
+import LoadMoreBtn from './js/load-more-btn';
 import * as basicLightbox from 'basiclightbox';
 
 const refs = getRefs();
+const loadMoreBtn = new LoadMoreBtn({
+  selector: '[data-action="load-more"]',
+  hidden: true,
+});
 const apiService = new ApiService();
 
 refs.input.addEventListener('input', debounce(onInputChange, 500));
-refs.loadMoreBtn.addEventListener('click', onLoadMore);
+loadMoreBtn.refs.button.addEventListener('click', fetchHits);
 refs.gallery.addEventListener('click', onImageGalleryClick);
 
 function onInputChange(event) {
@@ -21,17 +26,22 @@ function onInputChange(event) {
 
   clearGallery();
 
+  loadMoreBtn.show();
   apiService.resetPage();
-  apiService.fetchImages().then(appendHitsMarkup);
+  fetchHits();
 }
 
-function onLoadMore() {
-  apiService.fetchImages().then(appendHitsMarkup);
+function fetchHits() {
+  loadMoreBtn.disable();
+  apiService.fetchImages().then(hits => {
+    appendHitsMarkup(hits);
+    loadMoreBtn.enable();
+  });
 }
 
 function appendHitsMarkup(hits) {
   refs.gallery.insertAdjacentHTML('beforeend', hitsTpl(hits));
-  refs.loadMoreBtn.scrollIntoView({
+  loadMoreBtn.refs.button.scrollIntoView({
     behavior: 'smooth',
     block: 'end',
   });

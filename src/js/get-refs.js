@@ -4,6 +4,5 @@ export default function getRefs() {
     input: document.querySelector('input'),
     gallery: document.querySelector('.gallery'),
     photoCard: document.querySelector('.photo-card'),
-    loadMoreBtn: document.querySelector('[data-action="load-more"]'),
   };
 }
