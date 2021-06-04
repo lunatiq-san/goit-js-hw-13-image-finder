@@ -2938,6 +2938,10 @@ function fetchHits() {
   apiService.fetchImages().then(function (hits) {
     appendHitsMarkup(hits);
     loadMoreBtn.enable();
+
+    if (hits.length < 12) {
+      loadMoreBtn.hide();
+    }
   });
 }
 
@@ -2994,7 +2998,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "10223" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "5703" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
