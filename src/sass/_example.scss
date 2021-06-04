@@ -16,13 +16,18 @@ main {
 }
 
 input {
-  display: block;
+  display: inline-block;
   margin-left: auto;
   margin-right: auto;
 }
 
 .search-form {
   margin-bottom: 20px;
+  text-align: center;
+}
+
+.search-form > .btn {
+  display: inline-block;
 }
 
 .gallery {

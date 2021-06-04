@@ -1,7 +1,6 @@
 import hitsTpl from './templates/hits.hbs';
 import './sass/main.scss';
 import getRefs from './js/get-refs';
-import debounce from 'lodash.debounce';
 import ApiService from './js/apiService';
 import LoadMoreBtn from './js/load-more-btn';
 import * as basicLightbox from 'basiclightbox';
@@ -13,12 +12,15 @@ const loadMoreBtn = new LoadMoreBtn({
 });
 const apiService = new ApiService();
 
-refs.input.addEventListener('input', debounce(onInputChange, 500));
+refs.searchForm.addEventListener('submit', onInputChange);
 loadMoreBtn.refs.button.addEventListener('click', fetchHits);
 refs.gallery.addEventListener('click', onImageGalleryClick);
 
 function onInputChange(event) {
-  apiService.query = event.target.value;
+  event.preventDefault();
+
+  const form = event.currentTarget;
+  apiService.query = form.elements.query.value;
 
   if (apiService.query.trim() === '') {
     return;
