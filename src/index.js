@@ -36,6 +36,10 @@ function fetchHits() {
   apiService.fetchImages().then(hits => {
     appendHitsMarkup(hits);
     loadMoreBtn.enable();
+
+    if (hits.length < 12) {
+      loadMoreBtn.hide();
+    }
   });
 }
 
